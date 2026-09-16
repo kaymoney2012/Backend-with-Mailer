@@ -1,0 +1,1 @@
+{"version":3,"file":"profileModel.d.ts","sourceRoot":"","sources":["../../src/model/profileModel.ts"],"names":[],"mappings":"AAAA,OAAO,QAAoB,MAAM,UAAU,CAAC;AAG5C,MAAM,WAAW,QAAS,SAAQ,QAAQ;IACtC,IAAI,EAAE,MAAM,CAAC;IACb,KAAK,EAAE,MAAM,CAAC;IACd,GAAG,EAAE,MAAM,CAAC;IACZ,OAAO,EAAE,MAAM,CAAC;IAChB,SAAS,EAAE,IAAI,CAAA;CAClB;AAyBD,QAAA,MAAM,YAAY;;;;;;iBAAkD,CAAA;eAErD,YAAY"}
