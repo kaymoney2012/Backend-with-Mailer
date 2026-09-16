@@ -2,7 +2,7 @@ import mongoose, { Schema, type Document } from "mongoose";
 
 export type userRole = "seller" | "buyer";
 
-export interface InewUser extends Document {n
+export interface InewUser extends Document {
   email: string;
   password: string;
   termsAndCondition: boolean;
