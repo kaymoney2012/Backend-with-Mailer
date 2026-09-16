@@ -8,9 +8,9 @@ const generateNewOtp = () => {
 // Signup
 export const signup = async (req, res) => {
     try {
-        const { email, password, termsAndCondition, role } = req.body;
+        const { email, password, termsAndCondition, role, } = req.body;
         const normalizedEmail = email.toLowerCase().trim();
-        const existingUser = await newUser.findOne({ email });
+        const existingUser = await newUser.findOne({ email: normalizedEmail });
         if (existingUser) {
             return res.status(400).json({
                 message: "Email already exist",
@@ -27,7 +27,7 @@ export const signup = async (req, res) => {
             isVerified: false,
             otpExpires: new Date(Date.now() + 10 * 60 * 1000),
         });
-        await sendOtpToEmail(email, otp);
+        await sendOtpToEmail(normalizedEmail, otp);
         return res.status(201).json({
             message: "signup successful. Check your email for your OTP",
             userId: user._id,
@@ -47,7 +47,8 @@ export const signup = async (req, res) => {
 export const verifyOTP = async (req, res) => {
     try {
         const { email, otp } = req.body;
-        const user = await newUser.findOne({ email });
+        const normalizedEmail = email.toLowerCase().trim();
+        const user = await newUser.findOne({ email: normalizedEmail });
         if (!user) {
             return res.status(404).json({
                 message: "user not found",
@@ -73,10 +74,8 @@ export const verifyOTP = async (req, res) => {
                 message: "Invalid or wrong OTP",
             });
         }
-        ((user.isVerified = true),
-            // user.otp = undefined,
-            // user.otpExpires = undefined,
-            await user.save());
+        user.isVerified = true;
+        await user.save();
         return res.status(200).json({
             message: "Email has successfully verified",
         });
@@ -88,11 +87,12 @@ export const verifyOTP = async (req, res) => {
         });
     }
 };
-// Re-send OTP
+// Re-send OTP — old OTP is invalidated because user.otp is overwritten
 export const resendOTP = async (req, res) => {
     try {
         const { email } = req.body;
-        const user = await newUser.findOne({ email });
+        const normalizedEmail = email.toLowerCase().trim();
+        const user = await newUser.findOne({ email: normalizedEmail });
         if (!user) {
             return res.status(404).json({
                 message: "User not found",
@@ -104,12 +104,13 @@ export const resendOTP = async (req, res) => {
             });
         }
         const otp = generateNewOtp();
+        // Overwriting user.otp invalidates the previous OTP
         user.otp = otp;
         user.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
         await user.save();
-        await sendOtpToEmail(email, otp);
+        await sendOtpToEmail(normalizedEmail, otp);
         return res.json({
-            message: "A new OTP has been sent",
+            message: "A new OTP has been sent. Your previous OTP is now invalid.",
         });
     }
     catch (error) {
@@ -138,6 +139,7 @@ export const signin = async (req, res) => {
                 success: false,
                 message: "user has not been verified",
             });
+            return;
         }
         // check password
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
@@ -156,7 +158,7 @@ export const signin = async (req, res) => {
         });
         res.status(200).json({
             success: true,
-            message: "signin successsful",
+            message: "signin successful",
             data: {
                 token,
                 user: {
@@ -170,7 +172,7 @@ export const signin = async (req, res) => {
     }
     catch (error) {
         console.error(error, "error");
-        res.status(400).json({
+        res.status(500).json({
             success: false,
             message: "error signing in",
         });

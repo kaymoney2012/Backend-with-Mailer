@@ -87,7 +87,7 @@ export const validateSignup = (req, res, next) => {
         return;
     }
     // role
-    if (!["landlord", "tenant"].includes(role)) {
+    if (!["seller", "buyer"].includes(role)) {
         res.status(400).json({
             success: false,
             message: "Role must be either landlord or tenant"
