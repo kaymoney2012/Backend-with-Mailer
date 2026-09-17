@@ -1,6 +1,6 @@
 import mongoose, { Schema, type Document } from "mongoose";
 
-export type userRole = "seller" | "buyer";
+export type userRole = "landlord" | "tenant";
 
 export interface InewUser extends Document {
   email: string;
@@ -32,7 +32,7 @@ const newUserSchema = new Schema<InewUser>(
     },
     role: {
       type: String,
-      enum: ["seller", "buyer"],
+      enum: ["landlord", "tenant"],
       required: [true, "role is required"],
     },
     isVerified: {
