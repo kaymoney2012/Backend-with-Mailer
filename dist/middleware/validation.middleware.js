@@ -81,13 +81,13 @@ export const validateSignup = (req, res, next) => {
     // terms and conditions
     if (termsAndCondition !== true) {
         res.status(400).json({
-            succes: false,
+            success: false,
             message: "You must accept Terms and condition"
         });
         return;
     }
     // role
-    if (!["seller", "buyer"].includes(role)) {
+    if (!["landlord", "tenant"].includes(role)) {
         res.status(400).json({
             success: false,
             message: "Role must be either landlord or tenant"

@@ -1,5 +1,5 @@
 import mongoose, { type Document } from "mongoose";
-export type userRole = "seller" | "buyer";
+export type userRole = "landlord" | "tenant";
 export interface InewUser extends Document {
     email: string;
     password: string;

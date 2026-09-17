@@ -158,6 +158,7 @@ export const resendOTP = async (req: Request, res: Response) => {
   }
 };
 
+//signin
 export const signin = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;

@@ -18,7 +18,7 @@ const newUserSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ["seller", "buyer"],
+        enum: ["landlord", "tenant"],
         required: [true, "role is required"],
     },
     isVerified: {

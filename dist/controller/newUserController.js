@@ -120,6 +120,7 @@ export const resendOTP = async (req, res) => {
         });
     }
 };
+//signin
 export const signin = async (req, res) => {
     try {
         const { email, password } = req.body;
