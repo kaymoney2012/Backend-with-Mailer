@@ -1,13 +1,30 @@
 import nodemailer from "nodemailer";
 
+console.log("GMAIL_USER:", process.env.GMAIL_USER);
+console.log(
+  "GMAIL_APP_PASSWORD exists:",
+  !!process.env.GMAIL_APP_PASSWORD
+);
+
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
-  secure: false, // true for 465, false for 587
+  secure: false,
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD,
   },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000,
+});
+
+transporter.verify((error, success) => {
+  if (error) {
+    console.error("SMTP VERIFY ERROR:", error);
+  } else {
+    console.log("SMTP READY");
+  }
 });
 
 export const sendOtpToEmail = async (
@@ -55,7 +72,7 @@ export const sendOtpToEmail = async (
 
     console.log("Email sent:", info.messageId);
   } catch (error) {
-    console.error("Failed to send email:", error);
+    console.error("FAILED TO SEND EMAIL:", error);
     throw error;
   }
 };

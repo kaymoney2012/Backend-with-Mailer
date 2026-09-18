@@ -23,10 +23,9 @@ export const signup = async (req, res) => {
         const existingUser = await newUser.findOne({ email });
         if (existingUser) {
             return res.status(400).json({
-                message: "Email already exist"
+                message: "Email already exist",
             });
         }
-        ;
         const hashPassword = await bcrypt.hash(password, 10);
         const otp = generateNewOtp();
         const user = await newUser.create({
@@ -34,9 +33,14 @@ export const signup = async (req, res) => {
             password: hashPassword,
             otp,
             isVerified: false,
-            otpExpires: new Date(Date.now() + 10 * 60 * 1000)
+            otpExpires: new Date(Date.now() + 10 * 60 * 1000),
         });
-        await sendOtpToEmail(email, otp);
+        try {
+            await sendOtpToEmail(email, otp);
+        }
+        catch (mailError) {
+            console.error("EMAIL ERROR:", mailError);
+        }
         return res.status(201).json({
             message: "signup successful. Check your email for your OTP",
             userId: user._id,
@@ -45,7 +49,7 @@ export const signup = async (req, res) => {
     catch (error) {
         console.error(error);
         return res.status(500).json({
-            message: "signup error"
+            message: "signup error",
         });
     }
 };
@@ -56,45 +60,41 @@ export const verifyOTP = async (req, res) => {
         const user = await newUser.findOne({ email });
         if (!user) {
             return res.status(404).json({
-                message: "user not found"
+                message: "user not found",
             });
         }
-        ;
         if (user.isVerified) {
             return res.status(400).json({
-                message: "Email is already verified"
+                message: "Email is already verified",
             });
         }
-        ;
         if (!user.otp || !user.otpExpires) {
             return res.status(400).json({
-                message: "No OTP found"
+                message: "No OTP found",
             });
         }
         if (user.otpExpires.getTime() < Date.now()) {
             return res.status(400).json({
-                message: "OTP expired"
+                message: "OTP expired",
             });
         }
-        ;
         if (user.otp !== otp) {
             return res.status(400).json({
-                message: "Invalid or wrong OTP"
+                message: "Invalid or wrong OTP",
             });
         }
-        ;
-        user.isVerified = true,
+        ((user.isVerified = true),
             // user.otp = undefined,
             // user.otpExpires = undefined,
-            await user.save();
+            await user.save());
         return res.status(200).json({
-            message: "Email has successfully verified"
+            message: "Email has successfully verified",
         });
     }
     catch (error) {
         console.error(error);
         return res.status(500).json({
-            message: "Verification error"
+            message: "Verification error",
         });
     }
 };
@@ -105,32 +105,31 @@ export const resendOTP = async (req, res) => {
         const user = await newUser.findOne({ email });
         if (!user) {
             return res.status(404).json({
-                message: "User not found"
+                message: "User not found",
             });
         }
         if (user.isVerified) {
             return res.status(400).json({
-                message: "User already verified"
+                message: "User already verified",
             });
         }
-        ;
         const otp = generateNewOtp();
         user.otp = otp;
         user.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
         await user.save();
         await sendOtpToEmail(email, otp);
         return res.json({
-            message: "A new OTP has been sent"
+            message: "A new OTP has been sent",
         });
     }
     catch (error) {
-        console.error(error);
+        console.error("SIGNUP ERROR:", error);
         return res.status(500).json({
-            message: "Error sending OTP"
+            message: "Error sending OTP",
         });
     }
 };
-// Signin 
+// Signin
 export const signin = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -139,7 +138,7 @@ export const signin = async (req, res) => {
         if (!user) {
             res.status(401).json({
                 success: false,
-                message: "user not found"
+                message: "user not found",
             });
             return;
         }
@@ -147,7 +146,7 @@ export const signin = async (req, res) => {
         if (!user.isVerified) {
             res.status(403).json({
                 success: false,
-                message: "user has not been verified"
+                message: "user has not been verified",
             });
         }
         // check password
@@ -155,14 +154,14 @@ export const signin = async (req, res) => {
         if (!isPasswordCorrect) {
             res.status(400).json({
                 success: false,
-                message: "Invalid email or password"
+                message: "Invalid email or password",
             });
             return;
         }
         // generate JWT
         const token = generateNewToken({
             id: user._id.toString(),
-            email: user.email
+            email: user.email,
         });
         res.status(200).json({
             success: true,
@@ -173,15 +172,15 @@ export const signin = async (req, res) => {
                     id: user._id,
                     email: user.email,
                     isVerified: user.isVerified,
-                }
-            }
+                },
+            },
         });
     }
     catch (error) {
         console.error(error, "error");
         res.status(400).json({
             success: false,
-            message: "error signing in"
+            message: "error signing in",
         });
     }
 };
