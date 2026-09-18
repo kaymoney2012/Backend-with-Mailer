@@ -7,21 +7,16 @@ console.log(
 );
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
+  host: "74.125.140.108",
   port: 587,
   secure: false,
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD,
   },
-
-  // Force IPv4
-  family: 4,
-
   tls: {
     servername: "smtp.gmail.com",
   },
-
   connectionTimeout: 15000,
   greetingTimeout: 15000,
   socketTimeout: 15000,
