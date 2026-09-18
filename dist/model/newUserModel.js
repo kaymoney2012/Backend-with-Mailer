@@ -2,24 +2,11 @@ import mongoose, { Schema } from "mongoose";
 const newUserSchema = new Schema({
     email: {
         type: String,
-        required: [true, "Email is required"],
-        unique: true,
-        lowercase: true,
+        required: true,
     },
     password: {
         type: String,
-        required: [true, "Password is required"],
-    },
-    termsAndCondition: {
-        type: Boolean,
-        required: [true, "Terms and condition is required"],
-        validate: (value) => value === true,
-        message: "You must accept the terms and conditions",
-    },
-    role: {
-        type: String,
-        enum: ["landlord", "tenant"],
-        required: [true, "role is required"],
+        required: true,
     },
     isVerified: {
         type: Boolean,

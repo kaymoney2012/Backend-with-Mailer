@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { resendOTP, signin, signup, verifyOTP, } from "../controller/newUserController.js";
+import { resendOTP, signin, signup, verifyOTP } from "../controller/newUserController.js";
 const newUserRouter = Router();
 newUserRouter.post("/signup", signup);
 newUserRouter.post("/sendotp", verifyOTP);

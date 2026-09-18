@@ -1,54 +1,37 @@
 import mongoose, { Schema, type Document } from "mongoose";
 
-export type userRole = "landlord" | "tenant";
 
 export interface InewUser extends Document {
-  email: string;
-  password: string;
-  termsAndCondition: boolean;
-  role: userRole;
-  isVerified: boolean;
-  otp?: string;
-  otpExpires?: Date;
+    email: string;
+    password: string;
+    isVerified: boolean;
+    otp?: string;
+    otpExpires?: Date;
 }
 
-const newUserSchema = new Schema<InewUser>(
-  {
+const newUserSchema = new Schema<InewUser>({
     email: {
-      type: String,
-      required: [true, "Email is required"],
-      unique: true,
-      lowercase: true,
+        type: String,
+        required: true,
     },
     password: {
-      type: String,
-      required: [true, "Password is required"],
-    },
-    termsAndCondition: {
-      type: Boolean,
-      required: [true, "Terms and condition is required"],
-      validate: (value: boolean) => value === true,
-      message: "You must accept the terms and conditions",
-    },
-    role: {
-      type: String,
-      enum: ["landlord", "tenant"],
-      required: [true, "role is required"],
+        type: String,
+        required: true,
     },
     isVerified: {
-      type: Boolean,
-      default: false,
+        type: Boolean,
+        default: false,
     },
     otp: {
-      type: String,
+        type: String,
     },
     otpExpires: {
-      type: Date,
+        type: Date,
     },
-  },
-  {
-    timestamps: true,
-  },
+},
+    {
+        timestamps: true,
+    }
 );
 
 const newUser = mongoose.model<InewUser>("newUser", newUserSchema);

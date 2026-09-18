@@ -1,1 +1,0 @@
-{"version":3,"file":"profileRoutes.js","sourceRoot":"","sources":["../../src/routes/profileRoutes.ts"],"names":[],"mappings":"AAAA,OAAO,EAAC,MAAM,EAAC,MAAM,SAAS,CAAC;AAC/B,OAAO,EAAE,UAAU,EAAE,QAAQ,EAAE,MAAM,oCAAoC,CAAC;AAE1E,MAAM,aAAa,GAAG,MAAM,EAAE,CAAC;AAE/B,aAAa,CAAC,IAAI,CAAC,SAAS,EAAE,UAAU,CAAC,CAAA;AACzC,aAAa,CAAC,GAAG,CAAC,SAAS,EAAE,QAAQ,CAAC,CAAA;AAEtC,eAAe,aAAa,CAAC"}
