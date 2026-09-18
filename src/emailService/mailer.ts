@@ -14,12 +14,20 @@ const transporter = nodemailer.createTransport({
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD,
   },
-  connectionTimeout: 10000,
-  greetingTimeout: 10000,
-  socketTimeout: 10000,
+
+  // Force IPv4
+  family: 4,
+
+  tls: {
+    servername: "smtp.gmail.com",
+  },
+
+  connectionTimeout: 15000,
+  greetingTimeout: 15000,
+  socketTimeout: 15000,
 });
 
-transporter.verify((error, success) => {
+transporter.verify((error) => {
   if (error) {
     console.error("SMTP VERIFY ERROR:", error);
   } else {
@@ -32,6 +40,9 @@ export const sendOtpToEmail = async (
   otp: string
 ): Promise<void> => {
   try {
+    console.log("Sending OTP to:", email);
+    console.log("OTP:", otp);
+
     const info = await transporter.sendMail({
       from: `"Backend Class" <${process.env.GMAIL_USER}>`,
       to: email,
@@ -39,29 +50,24 @@ export const sendOtpToEmail = async (
       text: `Your verification code is ${otp}. It expires in 15 minutes.`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <h1 style="text-align: center; color: #333;">
-            Login to Your Account
-          </h1>
+          <h1 style="text-align:center;">Login to Your Account</h1>
+          <h2 style="text-align:center;">Email Verification</h2>
 
-          <h2 style="text-align: center; color: #555;">
-            Email Verification
-          </h2>
-
-          <p style="text-align: center;">
+          <p style="text-align:center;">
             Your verification code is:
           </p>
 
           <p style="
-            text-align: center;
-            font-weight: 900;
-            font-size: 32px;
-            letter-spacing: 10px;
-            color: #2563eb;
+            text-align:center;
+            font-size:32px;
+            font-weight:900;
+            letter-spacing:10px;
+            color:#2563eb;
           ">
             ${otp}
           </p>
 
-          <p style="text-align: center; color: #666;">
+          <p style="text-align:center;">
             Enter this code within the next
             <strong>15 minutes</strong>
             to log in to your account.
