@@ -1,6 +1,11 @@
 import mongoose, { type Document } from "mongoose";
 export interface InewUser extends Document {
+    name: string;
+    username: string;
+    phone: string;
+    nationality: string;
     email: string;
+    dateOfBirth: Date;
     password: string;
     isVerified: boolean;
     otp?: string;

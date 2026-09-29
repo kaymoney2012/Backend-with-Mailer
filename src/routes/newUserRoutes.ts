@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { resendOTP, signin, signup, verifyOTP } from "../controller/newUserController.js";
+import { resendOTP, signin, signup, updateProfile, verifyOTP } from "../controller/newUserController.js";
+import { protect } from "../middleware/protect.js";
 
 
 
@@ -9,5 +10,6 @@ newUserRouter.post("/signup", signup);
 newUserRouter.post("/sendotp", verifyOTP);
 newUserRouter.post("/resendotp", resendOTP);
 newUserRouter.post("/signin", signin );
+newUserRouter.patch("/updateprofile", protect, updateProfile);
 
 export default newUserRouter;
